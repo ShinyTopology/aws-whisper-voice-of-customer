@@ -1,0 +1,36 @@
+{
+    "Comment": "A state machine that does mock stock trading.",
+    "StartAt": "Transcribe audio",
+    "States": {
+      "Transcribe audio": {
+        "Type": "Task",
+        "Resource": "${TranscribeAudioArn}",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.TaskFailed"
+            ],
+            "IntervalSeconds": 15,
+            "MaxAttempts": 5,
+            "BackoffRate": 1.5
+          }
+        ],
+        "Next": "Extract Sentiment"
+      },
+      "Extract Sentiment": {
+        "Type": "Task",
+        "Resource": "${ExtractSentimentArn}",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.TaskFailed"
+            ],
+            "IntervalSeconds": 2,
+            "MaxAttempts": 3,
+            "BackoffRate": 1
+          }
+        ],
+        "End": true
+      }
+    }
+  }

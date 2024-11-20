@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: S3 event trigger to Step Functions via Lambda
+
+Resources:
+  # S3 Bucket
+  VocInputBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: voc-input-144608043951
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: inputAudio/
+            Function: !GetAtt TriggerLambda.Arn
+  VocOutputBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: voc-output-144608043951
+
+  # Lambda Permission for S3
+  S3InvokeLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref TriggerLambda
+      Principal: s3.amazonaws.com
+      SourceArn: !Sub arn:aws:s3:::voc-input-144608043951
+
+  # Lambda Function
+  TriggerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.12
+      CodeUri: functions/trigger/
+      Role: !GetAtt TriggerLambdaRole.Arn
+      Environment:
+        Variables:
+          STATE_MACHINE_ARN: !Sub arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:VoiceOfCustomerStateMachine-ytWyamvHVxiC
+
+  # IAM Role for Lambda
+  TriggerLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: StepFunctionsInvoke
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - states:StartExecution
+                Resource: !Sub arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:VoiceOfCustomerStateMachine-ytWyamvHVxiC
+Outputs:
+  InputBucketName:
+    Description: Name of the S3 bucket for input audio files
+    Value: !Ref VocInputBucket.BucketName
+    Export:
+      Name: VocInputBucketName
+  OutputBucketName:
+    Description: Name of the S3 bucket for output files
+    Value: !Ref VocOutputBucket.BucketName
+    Export:
+      Name: VocOutputBucketName

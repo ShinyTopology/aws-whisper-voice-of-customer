@@ -1,0 +1,6 @@
+sample-files/brainstorming.txt
+sample-files/input/*
+dev.ipynb
+
+**/.aws-sam
+**/__pycache__

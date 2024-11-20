@@ -1,0 +1,15 @@
+ASR_SERVER_HOST = "localhost"
+ASR_SERVER_PORT = 8000
+
+INPUT_BUCKET = "voc-input-144608043951"
+INPUT_AUDIO_KEY = "inputAudio"
+
+OUTPUT_BUCKET = "voc-output-144608043951"
+OUTPUT_TRANSCRIBE_KEY = "transcribedOutput"
+OUTPUT_PARSED_RESULT_KEY = "parsedOutput"
+
+KDF_STREAM_NAME = "voc-kdf"
+VOC_OUTPUT_GLUE_DATABASE = "voc_db"
+VOC_OUTPUT_GLUE_TABLE = "voc_parsed_results"
+
+
