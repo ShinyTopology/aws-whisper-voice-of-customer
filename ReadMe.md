@@ -36,8 +36,8 @@ Follow this doc to install AWS Voice of Customer solution.
     - In AWS Management Console, go to Amazon Glue. Create a new database with name `voc_db`.
     - In AWS Management Console, go to Amazon Athena. In Primary work group, execute `voc-analytics/ddl_voc_output.sql` to create the table required.
     - Create **SSM parameters**
-        - **'/voc/GLUE_DB'** : Name of the Glue database in Step 4a)
-        - **'/voc/GLUE_TABLE_PROCESSED_TRANSCRIPTION'** : Name of the Glue table in Step 4b)
+        - **'/voc/GLUE_DB'** : Name of the Glue database `voc_db`
+        - **'/voc/GLUE_TABLE_PROCESSED_TRANSCRIPTION'** : Name of the Glue table `voc_processed_transaction`
 
 ## Provision Transcription server that is running the Whisper ASR model as a REST API.
 
