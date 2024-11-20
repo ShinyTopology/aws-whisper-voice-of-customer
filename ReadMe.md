@@ -149,7 +149,7 @@ Follow this doc to install AWS Voice of Customer solution.
     curl http://11.0.0.125:8000/doc # shows the API doc
     ```
 
-10. Create SSM parameter `/voc/TRANSCRIPTION_API_URL` : URL of the transcription server API. Should be "http://<public IP of the transcription server>:8000/asr"
+10. Create SSM parameter `/voc/TRANSCRIPTION_API_URL` : URL of the transcription server API. Should be "http://(public IP of the ASR server):8000/asr"
 
 ## Provision Bedrock Prompt
 
